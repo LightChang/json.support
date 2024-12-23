@@ -3,18 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>json.support</title>
+  <link rel="icon" href="favicon.png" id="favicon"/>
+  <title>json parser support online</title>
 
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B5RG9RBTZF"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+  <meta name="keywords" content="JSON parser, JSON formatter, online JSON tool, JSON analyzer, JavaScript JSON parser, JSON tree view, syntax highlighting JSON, validate JSON syntax, real-time JSON analysis tool, secure JSON processing, private JSON formatter, debug JSON online, beautify JSON, minify JSON, JSON viewer, JSON editing tool">
+  <meta name="description" content="Instantly analyze and format your JSON strings with our online JavaScript parser. Enjoy real-time tree view, syntax highlighting, and secure local processing—your data never leaves your device. Perfect for developers seeking fast, reliable, and private JSON analysis."/>
+  <meta name="author" content="Lightman Chang"/>
   
-    gtag('config', 'G-B5RG9RBTZF');
+  <!-- Open Graph（OG 標籤）-->
+  <meta property="og:title" content="json parser support online">
+  <meta property="og:description" content="Instantly analyze and format your JSON strings with our online JavaScript parser. Enjoy real-time tree view, syntax highlighting, and secure local processing—your data never leaves your device. Perfect for developers seeking fast, reliable, and private JSON analysis.">
+  <meta property="og:url" content="https://json.support/">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="favicon.png">
+
+  <!-- Twitter Card 標籤 -->
+  <meta name="twitter:card" content="favicon.png">
+  <meta name="twitter:title" content="json parser support online">
+  <meta name="twitter:description" content="Instantly analyze and format your JSON strings with our online JavaScript parser. Enjoy real-time tree view, syntax highlighting, and secure local processing—your data never leaves your device. Perfect for developers seeking fast, reliable, and private JSON analysis.">
+  <meta name="twitter:image" content="favicon.png">
+
+  <!-- 確保搜尋引擎將此 URL 視為主要版本。 -->
+  <link rel="canonical" href="https://json.support/">
+
+  <!-- 結構化數據（JSON-LD，JavaScript Object Notation for Linked Data）-->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "JSON Support",
+    "url": "https://json.support/",
+    "headline": "如何使用 JSON Support 格式化 JSON",
+    "author": {
+      "@type": "Person",
+      "name": "Lightman Chang"
+    },
+    "datePublished": "2024-12-24",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://json.support/"
+    }
+  }
   </script>
-    
+
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- shoelace.style -->
@@ -57,7 +88,23 @@
     .card-overview .delete-button, .card-overview .fetch-button {
       margin-left: 0.5rem; /* 如果需要按鈕之間有間距 */
     }
-    
+    .vertical {
+      min-height: 50%;
+    }
+    .vertical::part(base) {
+      grid-template-areas: 'slides slides pagination';
+    }
+    .vertical::part(pagination) {
+      flex-direction: column;
+    }
+    .vertical::part(navigation) {
+      transform: rotate(90deg);
+      display: flex;
+    }
+    sl-details.custom-icons::part(summary-icon) {
+      /* Disable the expand/collapse animation */
+      rotate: none;
+    }
   </style>
 </head>
 <body>
@@ -73,14 +120,14 @@
   </div>
   <script>
     async function fetchTimezones() {
-  try {
-    const response = await axios.get(`https://strapi.yao.care/api/timezone?lang=${navigator.languages.join('|')}`);
-    return response.data;
-  } catch (ex) {
-    console.error("Failed to fetch timezones:", ex);
-    return getDefaultTimezones();
-  }
-}
+      try {
+        const response = await axios.get(`https://strapi.yao.care/api/timezone?lang=${navigator.languages.join('|')}`);
+        return response.data;
+      } catch (ex) {
+        console.error("Failed to fetch timezones:", ex);
+        return getDefaultTimezones();
+      }
+    }
 
     function getDefaultTimezones() {
       return [
@@ -180,6 +227,18 @@
         <strong>"Thank you for sponsoring <a href="https://www.richme.com.tw/" target="_blank">金豐禾</a> !!!</strong><br />
         This cup of bubble tea feels extra warm. We really appreciate it!
       </sl-alert>
+      <sl-divider style="--color: tomato; --spacing: 1rem;"></sl-divider>
+      <sl-details summary="Shoelace web components" class="custom-icons">
+        <sl-icon name="plus-square" slot="expand-icon"></sl-icon>
+        <sl-icon name="dash-square" slot="collapse-icon"></sl-icon>
+        <a href="https://shoelace.style/" target="_blank">Shoelace</a> is a collection of professionally designed, accessible Web Components.
+      </sl-details>
+      <sl-details summary="flaticon free icons" class="custom-icons">
+        <sl-icon name="plus-square" slot="expand-icon"></sl-icon>
+        <sl-icon name="dash-square" slot="collapse-icon"></sl-icon>
+        <a href="https://www.flaticon.com/free-icons/json" title="json icons">Json icons created by LAB Design Studio - Flaticon</a>
+      </sl-details>
+      
       <sl-divider style="--color: tomato; --spacing: 1rem;"></sl-divider>
       <template id="template">
         <div class="editor hidden">
