@@ -80,5 +80,10 @@ jobs:
     - name: Check dist folder
       run: ls -l dist || echo "dist folder does not exist!"
 
+    - name: Configure Git identity
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+
     - name: Deploy to GitHub Pages
       run: npx gh-pages -d dist
