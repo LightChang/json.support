@@ -86,4 +86,7 @@ jobs:
         git config user.email "actions@github.com"
 
     - name: Deploy to GitHub Pages
-      run: npx gh-pages -d dist
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        npx gh-pages -d dist --branch gh-pages --repo "https://x-access-token:${GITHUB_TOKEN}@github.com/LightChang/json.support.git"
