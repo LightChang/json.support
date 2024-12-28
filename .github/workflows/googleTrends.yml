@@ -75,6 +75,10 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: dist
+        path: ./dist
+
+    - name: Check dist folder
+      run: ls -l dist || echo "dist folder does not exist!"
 
     - name: Deploy to GitHub Pages
       run: npx gh-pages -d dist
