@@ -33,6 +33,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
+        git config user.name "Light"
+        git config user.email "lightman.chang@gmail.com"
         # 檢查是否有變更
         if [ -n "$(git status --porcelain ./data/GoogleTrends)" ]; then
           git add ./data/GoogleTrends
