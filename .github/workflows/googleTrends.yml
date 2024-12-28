@@ -19,11 +19,10 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '18' # 根據需求調整 Node.js 版本
-        cache: 'pnpm'
+        node-version: '20'
 
     - name: Install dependencies
-      run: pnpm install
+      run: npm install --legacy-peer-deps
 
     # 執行你的 tasks/googleTrends.js 腳本
     - name: Run Google Trends Script
@@ -45,4 +44,4 @@ jobs:
 
     # 執行部署
     - name: Deploy to production
-      run: pnpm run deploy
+      run: npm run deploy
