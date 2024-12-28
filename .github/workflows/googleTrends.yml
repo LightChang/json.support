@@ -2,13 +2,11 @@ name: Google Trends Update and Deploy
 
 on:
   schedule:
-    # 每天 UTC 時間 22:17 執行（對應 UTC+8 時間 06:17）
     - cron: '17 22 * * *'
-  workflow_dispatch: # 可手動觸發
+  workflow_dispatch:
 
 jobs:
-  # 區塊 1: 取得 Google Trends
-  fetch-trends:
+  fetch-google-trends:
     runs-on: ubuntu-latest
 
     steps:
@@ -40,10 +38,9 @@ jobs:
           echo "No changes detected. Skipping commit and push."
         fi
 
-  # 區塊 2: Build Astro
   build-astro:
     runs-on: ubuntu-latest
-    needs: fetch-trends # 此區塊依賴於取得 Google Trends 的結果
+    needs: fetch-google-trends
 
     steps:
     - name: Checkout repository
@@ -60,28 +57,24 @@ jobs:
     - name: Build Astro
       run: npm run build
 
-    # 將 dist 資料夾保存到工作空間
     - name: Upload dist folder
       uses: actions/upload-artifact@v3
       with:
         name: dist
         path: dist
 
-  # 區塊 3: 發佈到 gh-pages
   deploy-gh-pages:
     runs-on: ubuntu-latest
-    needs: build-astro # 此區塊依賴於 Build Astro 的結果
+    needs: build-astro
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # 下載 dist 資料夾
     - name: Download dist folder
       uses: actions/download-artifact@v3
       with:
         name: dist
 
-    # 發佈到 GitHub Pages
     - name: Deploy to GitHub Pages
       run: npx gh-pages -d dist
