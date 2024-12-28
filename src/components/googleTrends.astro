@@ -20,9 +20,6 @@ const d_rss = path.join(d_GoogleTrends, year);
 if (!fs.existsSync(d_rss)) { fs.mkdirSync(d_rss, { recursive: true }); }
 const f_rss = path.join(d_rss, `${displayDate}.json`);
 const rss = fs.existsSync(f_rss) ? JSON.parse(fs.readFileSync(f_rss, "utf-8")) : [];
-
-const countryCode = navigator.language.split("-")[1]; // 提取國家代碼部分
-const shouldDisplayLink = displayGeo !== countryCode;
 ---
 <sl-divider style="--color: tomato; --spacing: 1rem;"></sl-divider>
 <sl-breadcrumb>
@@ -38,13 +35,24 @@ const shouldDisplayLink = displayGeo !== countryCode;
     <sl-icon slot="prefix" name="rss"></sl-icon>
     <a href={`https://github.com/LightChang/json.support/blob/main/data/GoogleTrends/${geo}/${year}/${year}-${month}-${day}.json`} target="_blank">JSON</a>
   </sl-breadcrumb-item>
-  <sl-breadcrumb-item>
+  <sl-breadcrumb-item id="geo-breadcrumb">
     <sl-icon slot="prefix" name="geo"></sl-icon>
-    {displayGeo} {shouldDisplayLink && (
-      <a href={`/${countryCode}`}>⮕{countryCode}</a>
-    )}
+    {displayGeo}
   </sl-breadcrumb-item>
 </sl-breadcrumb>
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", () => {
+    const displayGeo = `${document.getElementById('geo-breadcrumb').textContent.trim()}`; // 從 DOM 獲取 displayGeo
+    const countryCode = navigator.language.split("-")[1]; // 提取瀏覽器的國家代碼
+    if (displayGeo !== countryCode) {
+      const breadcrumb = document.getElementById("geo-breadcrumb");
+      const link = document.createElement("a");
+      link.href = `/${countryCode}`;
+      link.innerText = `⮕${countryCode}`;
+      breadcrumb.appendChild(link);
+    }
+  });
+</script>
 <sl-carousel class="vertical" pagination loop autoplay orientation="vertical">
   {rss.filter((item: any) => { // 過濾條件：至少有一張圖片
     return [
