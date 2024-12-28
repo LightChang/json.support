@@ -6,7 +6,13 @@ import { parseStringPromise } from 'xml2js';
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 (async () => {
-  for (const geo of ["TW", "US"]) {
+  for (const geo of [
+    "TW",
+    "CN", "IN", "US", "ID", "BR",
+    "PK", "NG", "JP", "RU", "MX",
+    "PH", "VN", "DE", "EG", "IR",
+    "TR", "FR", "GB", "IT", "KR"
+  ]) {
 
     // GoogleTrends 根目錄資料夾
     const d_GoogleTrends = `./data/GoogleTrends/${geo}`;
