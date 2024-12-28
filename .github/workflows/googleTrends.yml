@@ -1,0 +1,48 @@
+name: Google Trends Update
+
+on:
+  schedule:
+    # 每天 7:00 UTC 執行（可根據需要調整時區）
+    - cron: '17 22 * * *'
+  workflow_dispatch: # 可手動觸發
+
+jobs:
+  update-trends:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 檢查程式碼
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # 設置 Node.js 環境並安裝依賴
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18' # 根據需求調整 Node.js 版本
+        cache: 'pnpm'
+
+    - name: Install dependencies
+      run: pnpm install
+
+    # 執行你的 tasks/googleTrends.js 腳本
+    - name: Run Google Trends Script
+      run: node tasks/googleTrends.js
+
+    # 將 ./data/GoogleTrends 資料夾 push 到 GitHub
+    - name: Commit and Push Data
+      run: |
+        git config user.name "Light"
+        git config user.email "lightman.chang@gmail.com"
+        # 檢查是否有變更
+        if [ -n "$(git status --porcelain ./data/GoogleTrends)" ]; then
+          git add ./data/GoogleTrends
+          git commit -m "Update Google Trends data"
+          git push
+        else
+          echo "No changes detected. Skipping commit and push."
+        fi
+
+    # 執行部署
+    - name: Deploy to production
+      run: pnpm run deploy

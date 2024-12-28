@@ -1,0 +1,102 @@
+---
+const { geo, date } = Astro.props;
+const displayGeo = geo || "US"; // 默認為美國
+const displayDate = date || new Date().toISOString().split("T")[0]; // 默認為當天日期
+
+import fs from "fs";
+import path from "path";
+
+// GoogleTrends 根目錄資料夾
+const d_GoogleTrends = `./data/GoogleTrends/${displayGeo}`;
+if (!fs.existsSync(d_GoogleTrends)) { fs.mkdirSync(d_GoogleTrends, { recursive: true }); }
+
+// 取得 GoogleTrends 歷史紀錄
+const f_history = path.join(d_GoogleTrends, "history.json");
+const history = fs.existsSync(f_history) ? JSON.parse(fs.readFileSync(f_history, "utf-8")) : {};
+
+// 取得 geo, date 指定的 GoogleTrends RSS 資料
+const [ year, month, day ] = displayDate.split("-");
+const d_rss = path.join(d_GoogleTrends, year);
+if (!fs.existsSync(d_rss)) { fs.mkdirSync(d_rss, { recursive: true }); }
+const f_rss = path.join(d_rss, `${displayDate}.json`);
+const rss = fs.existsSync(f_rss) ? JSON.parse(fs.readFileSync(f_rss, "utf-8")) : [];
+
+const countryCode = navigator.language.split("-")[1]; // 提取國家代碼部分
+const shouldDisplayLink = displayGeo !== countryCode;
+---
+<sl-divider style="--color: tomato; --spacing: 1rem;"></sl-divider>
+<sl-breadcrumb>
+  <sl-breadcrumb-item>
+    <sl-icon slot="prefix" name="globe"></sl-icon>
+    <a href="https://trends.google.com.tw/trends/" target="_blank">Google Trends</a>
+  </sl-breadcrumb-item>
+  <sl-breadcrumb-item>
+    <sl-icon slot="prefix" name="rss"></sl-icon>
+    <a href={`https://trends.google.com.tw/trending/rss?geo=${geo}`} target="_blank">RSS</a>
+  </sl-breadcrumb-item>
+  <sl-breadcrumb-item>
+    <sl-icon slot="prefix" name="rss"></sl-icon>
+    <a href={`https://github.com/LightChang/json.support/blob/main/data/GoogleTrends/${geo}/${year}/${year}-${month}-${day}.json`} target="_blank">JSON</a>
+  </sl-breadcrumb-item>
+  <sl-breadcrumb-item>
+    <sl-icon slot="prefix" name="geo"></sl-icon>
+    {displayGeo} {shouldDisplayLink && (
+      <a href={`/${countryCode}`}>⮕{countryCode}</a>
+    )}
+  </sl-breadcrumb-item>
+</sl-breadcrumb>
+<sl-carousel class="vertical" pagination loop autoplay orientation="vertical">
+  {rss.filter((item: any) => { // 過濾條件：至少有一張圖片
+    return [
+      item["ht:picture"],
+      ...(item.hasOwnProperty("ht:news_item")
+        ? item["ht:news_item"].map((news: any) => news["ht:news_item_picture"])
+        : [])
+    ].filter( url => typeof url === "string" && url.trim() !== "" ).length > 0;
+  }).map((item: any, index: number) => {
+    // console.log('b', item);
+    const currentImage = {
+      alt: item.hasOwnProperty("description") && item.description !== "" ? item.description : item.title,
+      src: item["ht:picture"],
+      url: `https://www.google.com/search?q=${item.title}`
+    }
+    if (item.hasOwnProperty("ht:news_item") && item["ht:news_item"].length > 0) {
+      const randomIdx = Math.floor(Math.random() * (item["ht:news_item"].length+1));
+      if (randomIdx < item["ht:news_item"].length) {
+        const newsItem = item["ht:news_item"][randomIdx];
+        if (newsItem.hasOwnProperty("ht:news_item_title")) {
+          currentImage.alt = newsItem["ht:news_item_title"];
+        }
+        if (newsItem.hasOwnProperty("ht:news_item_picture")) {
+          currentImage.src = newsItem["ht:news_item_picture"];
+        }
+        if (newsItem.hasOwnProperty("ht:news_item_url")) {
+          currentImage.url = newsItem["ht:news_item_url"];
+        }
+      }
+    }
+    let description = `${item.title} ${item["ht:approx_traffic"]}`;
+    if (item.description !== "") {
+      description += ` - ${item.description}`;
+    }
+    return (<sl-carousel-item key={index}>
+      <img loading="lazy" alt={currentImage.alt} src={currentImage.src} />
+      <a href={currentImage.url} target="_blank">{description}</a>
+    </sl-carousel-item>);
+  })}
+</sl-carousel>
+<sl-tree>
+  {Object.keys(history).map(year => {
+    return (<sl-tree-item key={year} label={year}>{year}
+      {Object.keys(history[year]).map(month => {
+        return (<sl-tree-item key={month} label={month}>{month}
+          {Object.keys(history[year][month]).map(day => {
+            return (<sl-tree-item key={day} label={day}>
+              <a href={`${displayGeo}/${year}/${month}/${day}`} >{`${day} (${history[year][month][day]})`}</a>
+            </sl-tree-item>);
+          })}
+        </sl-tree-item>);
+      })}
+    </sl-tree-item>);
+  })}
+</sl-tree>

@@ -1,0 +1,50 @@
+---
+import "tailwindcss/tailwind.css";
+import "../../styles/global.css";
+import Layout from "../../layouts/Layout.astro";
+import JsonBeautify from "../../components/jsonBeautify.astro";
+import Sponsoring from "../../components/sponsoring.astro";
+import GoogleTrends from "../../components/googleTrends.astro";
+import RefComponents from "../../components/refComponents.astro";
+
+import fs from "fs";
+import path from "path";
+export async function getStaticPaths() {
+  const d_GoogleTrends = path.resolve("./data/GoogleTrends"); // console.log(d_GoogleTrends);
+
+  const paths = [];
+  for (const geo of fs.readdirSync(d_GoogleTrends)) {
+    const d_geo = path.join(d_GoogleTrends, geo);// console.log('d_geo', d_geo);
+    
+    paths.push({
+      params: {
+        geo
+      },
+      props: {
+        metadata: {
+          title: "JSON Parser Support Online",
+          description: "JSON parser, JSON formatter, online JSON tool, JSON analyzer, JavaScript JSON parser, JSON tree view, syntax highlighting JSON, validate JSON syntax, real-time JSON analysis tool, secure JSON processing, private JSON formatter, debug JSON online, beautify JSON, minify JSON, JSON viewer, JSON editing tool",
+          keywords: "JSON parser, JSON formatter, online JSON tool, JSON analyzer, JavaScript JSON parser, JSON tree view, syntax highlighting JSON, validate JSON syntax, real-time JSON analysis tool, secure JSON processing, private JSON formatter, debug JSON online, beautify JSON, minify JSON, JSON viewer, JSON editing tool",
+          url: `https://json.support/${geo}`,
+          image: "/favicon.png",
+          datePublished: new Date().toISOString().split("T")[0],
+        },
+        geo
+      }
+    });
+  }
+  return paths;
+}
+---
+<Layout metadata={Astro.props.metadata}>
+  <div id="app" class="grid grid-cols-[3fr_3fr_2fr]">
+    <JsonBeautify />
+    <div class="p-4">
+      <Sponsoring />
+      <sl-divider style="--color: tomato; --spacing: 1rem;"></sl-divider>
+      <GoogleTrends geo={Astro.props.geo} />
+      <sl-divider style="--color: tomato; --spacing: 1rem;"></sl-divider>
+      <RefComponents
+    </div>
+  </div>
+</Layout>

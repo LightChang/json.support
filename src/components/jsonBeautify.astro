@@ -1,0 +1,26 @@
+---
+---
+<div class="container mt-4 ml-4">
+  <sl-icon-button name="plus-circle-dotted" id="left-add"></sl-icon-button></sl-icon-button>
+  <div id="left-container"></div>
+</div>
+<div class="p-4">
+  <sl-icon-button name="plus-circle-dotted" id="middle-add"></sl-icon-button></sl-icon-button>
+  <div id="middle-container"></div>
+</div>
+<template id="template">
+  <div class="editor hidden">
+    <sl-textarea class="textarea" help-text="JSON or https url"></sl-textarea>
+  </div>
+  <div class="viewer">
+    <sl-card class="card-overview">
+      <div slot="footer">
+        <sl-relative-time date="{lastUpdate}"></sl-relative-time>
+        <sl-icon-button name="trash3" label="del" style="font-size: 1.5rem;" class="delete-button"></sl-icon-button>
+        <sl-icon-button name="arrow-clockwise" label="fetch" style="font-size: 1.5rem;" class="fetch-button hidden"></sl-icon-button>
+      </div>
+      <div class="data"></div>
+    </sl-card>
+  </div>
+</template>
+<script src="/script/jsonBeautify.js" defer></script>
