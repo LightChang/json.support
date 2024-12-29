@@ -7,11 +7,11 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 (async () => {
   for (const geo of [
-    "TW",
-    "CN", "IN", "US", "ID", "BR",
+    "TW", "IN", "US", "ID", "BR",
     "PK", "NG", "JP", "RU", "MX",
     "PH", "VN", "DE", "EG", "IR",
     "TR", "FR", "GB", "IT", "KR"
+    // "CN" 沒有資料
   ]) {
 
     // GoogleTrends 根目錄資料夾
@@ -29,10 +29,11 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     const f_rss = path.join(d_rss, `${year}-${month}-${day}.json`);
     if (fs.existsSync(f_rss)) { continue; }
 
+    const url = `https://trends.google.com.tw/trending/rss?geo=${geo}`;
     for (let retry = 0; retry < 3; retry++) {
       try {
         // 取得 geo, date 指定的 GoogleTrends RSS 資料
-        const response = await axios.get(`https://trends.google.com.tw/trending/rss?geo=${geo}`);
+        const response = await axios.get(url);
         const json = await parseStringPromise(response.data, { explicitArray: false });
         fs.writeFileSync(f_rss, JSON.stringify(json.rss.channel.item));
 
@@ -46,7 +47,13 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
         break
       }
       catch (error) {
-        console.error(`嘗試第 ${retry + 1} 次時發生錯誤:`, error);
+        console.error(`嘗試第 ${retry + 1} 次時發生錯誤`);
+        if (error.code === "ERR_BAD_REQUEST") {
+          console.error(`ERR_BAD_REQUEST 伺服器拒絕存取`, url);
+        }
+        else {
+          console.error(error);
+        }
         delay(5000);
       }
     }
