@@ -2,7 +2,7 @@ name: Google Trends Update and Deploy
 
 on:
   schedule:
-    - cron: '17 22 * * *'
+    - cron: '17 6 * * *'
   workflow_dispatch:
 
 jobs:
