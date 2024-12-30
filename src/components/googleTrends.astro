@@ -55,12 +55,15 @@ const rss = fs.existsSync(f_rss) ? JSON.parse(fs.readFileSync(f_rss, "utf-8")) :
 </script>
 <sl-carousel class="vertical" pagination loop autoplay orientation="vertical">
   {rss.filter((item: any) => { // 過濾條件：至少有一張圖片
-    return [
-      item["ht:picture"],
-      ...(item.hasOwnProperty("ht:news_item")
-        ? item["ht:news_item"].map((news: any) => news["ht:news_item_picture"])
-        : [])
-    ].filter( url => typeof url === "string" && url.trim() !== "" ).length > 0;
+    const list = [item["ht:picture"]];
+    if (item.hasOwnProperty("ht:news_item")) {
+      if (Array.isArray(item["ht:news_item"])) {
+        list.push(...item["ht:news_item"].map((news: any) => news["ht:news_item_picture"]));
+      } else {
+        list.push(item["ht:news_item"]["ht:news_item_picture"]);
+      }
+    }
+    return list.filter( url => typeof url === "string" && url.trim() !== "" ).length > 0;
   }).map((item: any, index: number) => {
     // console.log('b', item);
     const currentImage = {
