@@ -52,9 +52,7 @@ import Timezones from "../components/timezones.astro";
 		<link rel="canonical" href={metadata.url} />
 
 		<!-- 結構化數據（JSON-LD，JavaScript Object Notation for Linked Data）-->
-		<script type="application/ld+json">
-			{structuredData}
-		</script>
+		<script type="application/ld+json" set:html={structuredData}></script>
 
 		<!-- shoelace.style -->
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.19.1/cdn/themes/light.css" />
