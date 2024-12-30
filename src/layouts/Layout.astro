@@ -4,7 +4,7 @@ const author = {
 	name: "Lightman Chang",
 	email: "lightman.chang@gmail.com"
 }
-const structuredData = {
+const structuredData = JSON.stringify({
 	"@context": "https://schema.org",
 	"@type": "WebSite",
 	"name": metadata.title ? metadata.title : "JSON Parser Tools",
@@ -19,7 +19,7 @@ const structuredData = {
 		"@type": "WebPage",
 		"@id": metadata.url
 	}
-}
+});
 import Timezones from "../components/timezones.astro";
 ---
 <!DOCTYPE html>
@@ -53,7 +53,7 @@ import Timezones from "../components/timezones.astro";
 
 		<!-- 結構化數據（JSON-LD，JavaScript Object Notation for Linked Data）-->
 		<script type="application/ld+json">
-			{JSON.stringify(structuredData)}
+			{structuredData}
 		</script>
 
 		<!-- shoelace.style -->

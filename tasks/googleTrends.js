@@ -54,7 +54,7 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
         else {
           console.error(error);
         }
-        delay(5000);
+        await delay(5000);
       }
     }
   }
