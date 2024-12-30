@@ -48,6 +48,12 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: Force fetch latest main branch
+      run: |
+        git fetch --all
+        git checkout main
+        git pull origin main
+        
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
