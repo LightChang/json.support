@@ -11,35 +11,86 @@ import fs from "fs";
 import path from "path";
 export async function getStaticPaths() {
   const d_GoogleTrends = path.resolve("./data/GoogleTrends"); // console.log(d_GoogleTrends);
+  const geoNames = {
+    "BR": "Brasil",
+    "KR": "대한민국",
+    "DE": "Deutschland",
+    "MX": "México",
+    "EG": "مصر ",
+    "NG": "Nigeria",
+    "FR": "France",
+    "PH": "Philippines",
+    "GB": "United Kingdom",
+    "PK": "پاکستان ",
+    "ID": "Indonesia",
+    "RU": "Россия",
+    "IN": "भारत",
+    "TR": "Türkiye",
+    "IR": "ایران ",
+    "TW": "台灣",
+    "IT": "Italia",
+    "US": "United States",
+    "JP": "日本",
+    "VN": "Việt Nam"
+  } as any;
+  const descriptionTemplates = {
+    "BR": "Visualize facilmente as tendências do Google em {year}-{month}-{day} no {geo} no formato JSON, perfeito para insights rápidos e exploração de dados.",
+    "KR": "{year}-{month}-{day} {geo}의 Google 트렌드를 JSON 형식으로 쉽게 확인하고, 빠른 인사이트와 데이터 탐색에 적합합니다.",
+    "DE": "Sehen Sie sich die Google-Trends vom {day}.{month}.{year} in {geo} im JSON-Format an, ideal für schnelle Einblicke und Datenanalyse.",
+    "MX": "Visualiza fácilmente las tendencias de Google del {year}-{month}-{day} en {geo} en formato JSON, perfecto para obtener información rápida y explorar datos.",
+    "EG": "عرض اتجاهات Google بتاريخ {year}-{month}-{day} في {geo} بتنسيق JSON بسهولة، مثالي للحصول على رؤى سريعة واستكشاف البيانات.",
+    "NG": "Easily view {year}-{month}-{day} Google Trends in {geo} in JSON format, perfect for quick insights and data exploration.",
+    "FR": "Visualisez facilement les tendances Google du {year}-{month}-{day} en {geo} au format JSON, parfait pour des analyses rapides et l'exploration des données.",
+    "PH": "Easily view {year}-{month}-{day} Google Trends in {geo} in JSON format, perfect for quick insights and data exploration.",
+    "GB": "Easily view {year}-{month}-{day} Google Trends in {geo} in JSON format, perfect for quick insights and data exploration.",
+    "PK": "{year}-{month}-{day} کو {geo} میں Google رجحانات کو JSON فارمیٹ میں آسانی سے دیکھیں، فوری بصیرت اور ڈیٹا کے تجزیے کے لیے بہترین۔",
+    "ID": "Lihat tren Google {year}-{month}-{day} di {geo} dalam format JSON dengan mudah, sempurna untuk wawasan cepat dan eksplorasi data.",
+    "RU": "Легко просматривайте тренды Google за {year}-{month}-{day} в {geo} в формате JSON, идеально для быстрого анализа и изучения данных.",
+    "IN": "{year}-{month}-{day} को {geo} में Google ट्रेंड्स को JSON प्रारूप में आसानी से देखें, त्वरित अंतर्दृष्टि और डेटा अन्वेषण के लिए उपयुक्त।",
+    "TR": "{year}-{month}-{day} Türkiye'deki Google Trendlerini JSON formatında kolayca görüntüleyin, hızlı içgörüler ve veri keşfi için mükemmel.",
+    "IR": "به راحتی روندهای گوگل در {geo} را در تاریخ {year}-{month}-{day} با فرمت JSON مشاهده کنید، مناسب برای بینش سریع و کاوش داده‌ها.",
+    "TW": "輕鬆以 JSON 格式檢視 {year}-{month}-{day} {geo} 的 Google 趨勢，適合快速洞察與資料探索。",
+    "IT": "Visualizza facilmente i trend di Google del {year}-{month}-{day} in {geo} in formato JSON, perfetto per analisi rapide ed esplorazioni dei dati.",
+    "US": "Easily view {year}-{month}-{day} Google Trends in {geo} in JSON format, perfect for quick insights and data exploration.",
+    "JP": "{year}-{month}-{day} {geo}のGoogleトレンドをJSON形式で簡単に表示し、迅速なインサイトとデータ探索に最適です。",
+    "VN": "Dễ dàng xem Google Trends ngày {year}-{month}-{day} tại {geo} dưới định dạng JSON, hoàn hảo để có thông tin nhanh chóng và khám phá dữ liệu."
+  } as any;
 
   const paths = [];
   for (const geo of fs.readdirSync(d_GoogleTrends)) {
     const d_geo = path.join(d_GoogleTrends, geo);// console.log('d_geo', d_geo);
 
     for (const dir of fs.readdirSync(d_geo)
-      .filter((name) => !isNaN(parseInt(name, 10)))
+      .filter((name) => !isNaN(parseInt(name)))
       .map((name) => path.join(d_geo, name.toString()))) {
 
       for (const f_json of fs.readdirSync(dir)) {
         const [year, month, day] = f_json.replace(".json", "").split("-");
+        const json = JSON.parse(fs.readFileSync(path.join(dir, f_json), "utf-8"));
+        const topics = [...new Set(
+          json.sort((a: any, b: any) => {
+            const key = "ht:approx_traffic";
+            const trafficA = parseInt(a[key].replace("+", ""), 10) || 0;
+            const trafficB = parseInt(b[key].replace("+", ""), 10) || 0;
+            return trafficB - trafficA;
+          })
+          .map((one: any) => one.title)
+        )].slice(0, 8);
+        const metadata = {
+          title: `json.support | Google Trends ${year}-${month}-${day} ${geoNames[geo]}: ${topics[0]}, ${topics[1]}, ${topics[2]}`,
+          description: descriptionTemplates[geo]
+            .replace("{geo}", geo)
+            .replace("{year}", year)
+            .replace("{month}", month)
+            .replace("{day}", day),
+          keywords: `${geoNames[geo]} Google Trends, ${year}-${month}-${day} trending topics, ${topics.join(', ')}`,
+          url: `https://json.support/${geo}`,
+          image: "/favicon.png",
+          datePublished: new Date().toISOString().split("T")[0],
+        } as any;
         paths.push({
-          params: {
-            geo,
-            year,
-            month,
-            day,
-          },
-          props: {
-            metadata: {
-              title: "JSON Parser Support Online",
-              description: "JSON parser, JSON formatter, online JSON tool, JSON analyzer, JavaScript JSON parser, JSON tree view, syntax highlighting JSON, validate JSON syntax, real-time JSON analysis tool, secure JSON processing, private JSON formatter, debug JSON online, beautify JSON, minify JSON, JSON viewer, JSON editing tool",
-              keywords: "JSON parser, JSON formatter, online JSON tool, JSON analyzer, JavaScript JSON parser, JSON tree view, syntax highlighting JSON, validate JSON syntax, real-time JSON analysis tool, secure JSON processing, private JSON formatter, debug JSON online, beautify JSON, minify JSON, JSON viewer, JSON editing tool",
-              url: `https://json.support/${geo}/${year}/${month}/${day}`,
-              image: "/favicon.png",
-              datePublished: `${year}-${month}-${day}`,
-            },
-            geo
-          }
+          params: { geo, year, month, day },
+          props: { metadata, geo }
         });
       }
     }

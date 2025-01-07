@@ -6,7 +6,7 @@
 	</div>
 </div>
 
-<script>
+<script is:inline>
 	async function fetchTimezones() {
 		try {
 			const response = await axios.get(`https://strapi.yao.care/api/timezone?lang=${navigator.languages.join('|')}`);

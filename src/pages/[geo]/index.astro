@@ -11,26 +11,98 @@ import fs from "fs";
 import path from "path";
 export async function getStaticPaths() {
   const d_GoogleTrends = path.resolve("./data/GoogleTrends"); // console.log(d_GoogleTrends);
+  const multiLang = {
+    title: {
+      "BR": "Explore Google Trends e insights regionais com nossa poderosa demonstração de ferramenta JSON online.",
+      "KR": "강력한 온라인 JSON 도구 데모로 Google 트렌드와 지역 통찰력을 탐색하세요.",
+      "DE": "Entdecken Sie Google-Trends und regionale Einblicke mit unserer leistungsstarken Online-JSON-Tool-Demo.",
+      "MX": "Explora Google Trends y conocimientos regionales con nuestra poderosa demostración de herramienta JSON en línea.",
+      "EG": "استكشف اتجاهات Google والرؤى الإقليمية باستخدام عرضنا التوضيحي القوي لأداة JSON عبر الإنترنت.",
+      "NG": "Explore Google Trends and regional insights with our powerful Online JSON Tool Demo.",
+      "FR": "Explorez les tendances Google et les insights régionaux avec notre puissante démonstration d'outil JSON en ligne.",
+      "PH": "Explore Google Trends and regional insights with our powerful Online JSON Tool Demo.",
+      "GB": "Explore Google Trends and regional insights with our powerful Online JSON Tool Demo.",
+      "PK": "گوگل رجحانات اور علاقائی بصیرت کو ہماری طاقتور آن لائن JSON ٹول ڈیمو کے ساتھ دریافت کریں۔",
+      "ID": "Jelajahi tren Google dan wawasan regional dengan Demo Alat JSON Online kami yang kuat.",
+      "RU": "Исследуйте тренды Google и региональные данные с помощью нашей мощной демонстрации онлайн-инструмента JSON.",
+      "IN": "हमारे शक्तिशाली ऑनलाइन JSON टूल डेमो के साथ Google ट्रेंड्स और क्षेत्रीय अंतर्दृष्टि का अन्वेषण करें।",
+      "TR": "Güçlü Çevrimiçi JSON Aracı Demomuz ile Google Trendlerini ve bölgesel içgörüleri keşfedin.",
+      "IR": "روندهای گوگل و دیدگاه‌های منطقه‌ای را با نسخه نمایشی ابزار JSON آنلاین قدرتمند ما کشف کنید.",
+      "TW": "使用我們強大的線上 JSON 工具範例，探索 Google 趨勢和地區洞察。",
+      "IT": "Esplora Google Trends e approfondimenti regionali con la nostra potente dimostrazione dello strumento JSON online.",
+      "US": "Explore Google Trends and regional insights with our powerful Online JSON Tool Demo.",
+      "JP": "強力なオンライン JSON ツール デモを使用して、Google トレンドと地域のインサイトを探索しましょう。",
+      "VN": "Khám phá xu hướng Google và thông tin chi tiết về khu vực với bản demo Công cụ JSON trực tuyến mạnh mẽ của chúng tôi."
+    },
+    description: {
+      "BR": "Descubra as últimas tendências do Google e insights regionais com nossa poderosa demonstração de ferramenta JSON online.",
+      "KR": "강력한 온라인 JSON 도구 데모로 최신 Google 트렌드 및 지역 통찰력을 발견하세요.",
+      "DE": "Entdecken Sie die neuesten Google-Trends und regionale Einblicke mit unserem leistungsstarken Online-JSON-Tool-Demo.",
+      "MX": "Descubre las últimas tendencias de Google y conocimientos regionales con nuestra poderosa demostración de herramienta JSON en línea.",
+      "EG": "اكتشف أحدث اتجاهات Google والرؤى الإقليمية باستخدام عرضنا التوضيحي القوي لأداة JSON عبر الإنترنت.",
+      "NG": "Discover the latest Google Trends and regional insights with our powerful Online JSON Tool Demo.",
+      "FR": "Découvrez les dernières tendances Google et les insights régionaux avec notre démonstration puissante d’outil JSON en ligne.",
+      "PH": "Discover the latest Google Trends and regional insights with our powerful Online JSON Tool Demo.",
+      "GB": "Discover the latest Google Trends and regional insights with our powerful Online JSON Tool Demo.",
+      "PK": "ہماری طاقتور آن لائن JSON ٹول ڈیمو کے ساتھ تازہ ترین گوگل ٹرینڈز اور علاقائی بصیرت دریافت کریں۔",
+      "ID": "Temukan tren Google terbaru dan wawasan regional dengan Demo Alat JSON Online kami yang kuat.",
+      "RU": "Откройте для себя последние тренды Google и региональные инсайты с помощью нашей мощной демонстрации онлайн-инструмента JSON.",
+      "IN": "हमारे शक्तिशाली ऑनलाइन JSON टूल डेमो के साथ नवीनतम Google ट्रेंड्स और क्षेत्रीय अंतर्दृष्टि खोजें।",
+      "TR": "Güçlü Çevrimiçi JSON Aracı Demomuz ile en son Google Trendlerini ve bölgesel içgörüleri keşfedin.",
+      "IR": "جدیدترین روندهای Google و دیدگاه‌های منطقه‌ای را با نسخه نمایشی ابزار JSON آنلاین قدرتمند ما کشف کنید.",
+      "TW": "使用我們強大的線上 JSON 工具範例，探索最新的 Google 趨勢和地區洞察。",
+      "IT": "Scopri le ultime tendenze di Google e approfondimenti regionali con la nostra potente dimostrazione dello strumento JSON online.",
+      "US": "Discover the latest Google Trends and regional insights with our powerful Online JSON Tool Demo.",
+      "JP": "強力なオンライン JSON ツール デモを使用して、最新の Google トレンドと地域のインサイトを発見しましょう。",
+      "VN": "Khám phá xu hướng Google mới nhất và thông tin chi tiết về khu vực với bản demo Công cụ JSON trực tuyến mạnh mẽ của chúng tôi."
+    },
+    keywords: {
+      "BR": "exemplos de JSON do Google Trends, visualizador de JSON, análise de JSON, ferramenta JSON online, JSON bonito, JSON minimizado",
+      "KR": "Google 트렌드 JSON 예제, JSON 뷰어, JSON 분석, 온라인 JSON 도구, JSON 포맷, JSON 최소화",
+      "DE": "Google Trends JSON-Beispiele, JSON-Viewer, JSON-Analyse, Online-JSON-Tool, JSON verschönern, JSON minimieren",
+      "MX": "ejemplos de JSON de Google Trends, visor de JSON, análisis de JSON, herramienta JSON en línea, JSON bonito, JSON minimizado",
+      "EG": "أمثلة JSON لاتجاهات Google, عارض JSON, تحليل JSON, أداة JSON عبر الإنترنت, تجميل JSON, تصغير JSON",
+      "NG": "Google Trends JSON examples, JSON viewer, JSON analysis, online JSON tool, beautify JSON, minify JSON",
+      "FR": "exemples JSON de Google Trends, visionneuse JSON, analyse JSON, outil JSON en ligne, embellir JSON, réduire JSON",
+      "PH": "Google Trends JSON examples, JSON viewer, JSON analysis, online JSON tool, beautify JSON, minify JSON",
+      "GB": "Google Trends JSON examples, JSON viewer, JSON analysis, online JSON tool, beautify JSON, minify JSON",
+      "PK": "Google رجحانات JSON مثالیں, JSON ویوور, JSON تجزیہ, آن لائن JSON ٹول, JSON خوبصورت, JSON کم کریں",
+      "ID": "contoh JSON Google Trends, penampil JSON, analisis JSON, alat JSON online, mempercantik JSON, meminimalkan JSON",
+      "RU": "Примеры JSON Google Trends, просмотрщик JSON, анализ JSON, онлайн-инструмент JSON, украсить JSON, минимизировать JSON",
+      "IN": "Google ट्रेंड्स JSON उदाहरण, JSON व्यूअर, JSON विश्लेषण, ऑनलाइन JSON उपकरण, JSON सुंदर बनाएं, JSON छोटा करें",
+      "TR": "Google Trends JSON örnekleri, JSON görüntüleyici, JSON analizi, çevrimiçi JSON aracı, JSON güzelleştirme, JSON küçültme",
+      "IR": "نمونه‌های JSON از Google Trends، نمایشگر JSON، تجزیه و تحلیل JSON، ابزار آنلاین JSON، زیبا سازی JSON، کوچک‌سازی JSON",
+      "TW": "Google Trends JSON 範例, JSON 檢視器, JSON 分析, 線上 JSON 工具, JSON 美化, JSON 壓縮",
+      "IT": "esempi JSON di Google Trends, visualizzatore JSON, analisi JSON, strumento JSON online, abbellire JSON, minimizzare JSON",
+      "US": "Google Trends JSON examples, JSON viewer, JSON analysis, online JSON tool, beautify JSON, minify JSON",
+      "JP": "Google トレンド JSON の例, JSON ビューア, JSON 分析, オンライン JSON ツール, JSON 整形, JSON 最小化",
+      "VN": "các ví dụ JSON từ Google Trends, trình xem JSON, phân tích JSON, công cụ JSON trực tuyến, làm đẹp JSON, thu nhỏ JSON"
+    }
+  } as any;
 
   const paths = [];
   for (const geo of fs.readdirSync(d_GoogleTrends)) {
     const d_geo = path.join(d_GoogleTrends, geo);// console.log('d_geo', d_geo);
-    
-    paths.push({
-      params: {
-        geo
-      },
-      props: {
-        metadata: {
-          title: "JSON Parser Support Online",
-          description: "JSON parser, JSON formatter, online JSON tool, JSON analyzer, JavaScript JSON parser, JSON tree view, syntax highlighting JSON, validate JSON syntax, real-time JSON analysis tool, secure JSON processing, private JSON formatter, debug JSON online, beautify JSON, minify JSON, JSON viewer, JSON editing tool",
-          keywords: "JSON parser, JSON formatter, online JSON tool, JSON analyzer, JavaScript JSON parser, JSON tree view, syntax highlighting JSON, validate JSON syntax, real-time JSON analysis tool, secure JSON processing, private JSON formatter, debug JSON online, beautify JSON, minify JSON, JSON viewer, JSON editing tool",
-          url: `https://json.support/${geo}`,
-          image: "/favicon.png",
-          datePublished: new Date().toISOString().split("T")[0],
-        },
-        geo
+    const metadata = {
+      title: `json.support |`,
+      description: "",
+      keywords: "",
+      url: `https://json.support/${geo}`,
+      image: "/favicon.png",
+      datePublished: new Date().toISOString().split("T")[0],
+    } as any;
+    for (const [key, original] of Object.entries(metadata)) {
+      if (!multiLang.hasOwnProperty(key)) { continue; }
+      if (multiLang[key].hasOwnProperty(geo)) {
+        metadata[key] = `${original} ${multiLang[key][geo]}`;
       }
+      else {
+        metadata[key] = `${original} ${multiLang[key]["US"]}`;
+      }
+    }
+    paths.push({
+      params: { geo },
+      props: { metadata, geo }
     });
   }
   return paths;
