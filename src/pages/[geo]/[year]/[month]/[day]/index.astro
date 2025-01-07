@@ -84,7 +84,7 @@ export async function getStaticPaths() {
             .replace("{month}", month)
             .replace("{day}", day),
           keywords: `${geoNames[geo]} Google Trends, ${year}-${month}-${day} trending topics, ${topics.join(', ')}`,
-          url: `https://json.support/${geo}`,
+          url: `https://json.support/${geo}/${year}/${month}/${day}`,
           image: "/favicon.png",
           datePublished: new Date().toISOString().split("T")[0],
         } as any;

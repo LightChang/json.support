@@ -6,13 +6,14 @@ import JsonBeautify from "../components/jsonBeautify.astro";
 import Sponsoring from "../components/sponsoring.astro";
 import GoogleTrends from "../components/googleTrends.astro";
 import RefComponents from "../components/refComponents.astro";
+import { DateUtility } from "../utils/format";
 export const metadata = {
   title: "JSON Parser & Google Trends Examples - Online JSON Tool",
   description: "Online JSON tool with tree view, syntax highlighting, and daily JSON examples from Google Trends.",
   keywords: "Google Trends JSON examples, JSON tree view, syntax highlighting, JSON analyzer, debug JSON online, beautify and minify JSON, online JSON viewer, JSON editing tool",
-  url: "https://json.support/",
+  url: `https://json.support/US/${new DateUtility().Format('yyyy/MM/dd')}`,
   image: "favicon.png",
-  datePublished: new Date().toISOString().split("T")[0],
+  datePublished: new DateUtility().Format('yyyy-MM-dd'),
 };
 ---
 <Layout metadata={metadata}>

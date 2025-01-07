@@ -6,6 +6,7 @@ import JsonBeautify from "../../components/jsonBeautify.astro";
 import Sponsoring from "../../components/sponsoring.astro";
 import GoogleTrends from "../../components/googleTrends.astro";
 import RefComponents from "../../components/refComponents.astro";
+import { DateUtility } from "../../utils/format";
 
 import fs from "fs";
 import path from "path";
@@ -87,7 +88,7 @@ export async function getStaticPaths() {
       title: `json.support |`,
       description: "",
       keywords: "",
-      url: `https://json.support/${geo}`,
+      url: `https://json.support/${geo}/${new DateUtility().Format('yyyy/MM/dd')}`,
       image: "/favicon.png",
       datePublished: new Date().toISOString().split("T")[0],
     } as any;

@@ -6,8 +6,11 @@ const displayDate = date || new Date().toISOString().split("T")[0]; // 默認為
 import fs from "fs";
 import path from "path";
 
+const rootDir = './data/GoogleTrends';
+// const geos = fs.readdirSync(rootDir); console.log(geos);
+
 // GoogleTrends 根目錄資料夾
-const d_GoogleTrends = `./data/GoogleTrends/${displayGeo}`;
+const d_GoogleTrends = `${rootDir}/${displayGeo}`;
 if (!fs.existsSync(d_GoogleTrends)) { fs.mkdirSync(d_GoogleTrends, { recursive: true }); }
 
 // 取得 GoogleTrends 歷史紀錄
@@ -21,11 +24,12 @@ if (!fs.existsSync(d_rss)) { fs.mkdirSync(d_rss, { recursive: true }); }
 const f_rss = path.join(d_rss, `${displayDate}.json`);
 const rss = fs.existsSync(f_rss) ? JSON.parse(fs.readFileSync(f_rss, "utf-8")) : [];
 ---
+<h2>Google Trends</h2>
 <sl-divider style="--color: tomato; --spacing: 1rem;"></sl-divider>
 <sl-breadcrumb>
   <sl-breadcrumb-item>
     <sl-icon slot="prefix" name="globe"></sl-icon>
-    <a href="https://trends.google.com.tw/trends/" target="_blank">Google Trends</a>
+    <a href="https://trends.google.com.tw/trends/" target="_blank">G Trends</a>
   </sl-breadcrumb-item>
   <sl-breadcrumb-item>
     <sl-icon slot="prefix" name="rss"></sl-icon>
@@ -36,8 +40,7 @@ const rss = fs.existsSync(f_rss) ? JSON.parse(fs.readFileSync(f_rss, "utf-8")) :
     <a href={`https://github.com/LightChang/json.support/blob/main/data/GoogleTrends/${geo}/${year}/${year}-${month}-${day}.json`} target="_blank">JSON</a>
   </sl-breadcrumb-item>
   <sl-breadcrumb-item id="geo-breadcrumb">
-    <sl-icon slot="prefix" name="geo"></sl-icon>
-    {displayGeo}
+    <sl-icon slot="prefix" name="geo"></sl-icon>{displayGeo}
   </sl-breadcrumb-item>
 </sl-breadcrumb>
 <script is:inline>
@@ -92,7 +95,7 @@ const rss = fs.existsSync(f_rss) ? JSON.parse(fs.readFileSync(f_rss, "utf-8")) :
     }
     return (<sl-carousel-item key={index}>
       <img loading="lazy" alt={currentImage.alt} src={currentImage.src} />
-      <a href={currentImage.url} target="_blank">{description}</a>
+      <a href={currentImage.url} target="_blank"><h3>{description}</h3></a>
     </sl-carousel-item>);
   })}
 </sl-carousel>
