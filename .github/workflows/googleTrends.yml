@@ -1,9 +1,17 @@
 name: Google Trends Update and Deploy
 
+# DISABLED - Workflow temporarily disabled
+# on:
+#   schedule:
+#     - cron: '17 6 * * *'
+#   workflow_dispatch:
+
 on:
-  schedule:
-    - cron: '17 6 * * *'
   workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "run" to confirm execution'
+        required: true
 
 jobs:
   fetch-google-trends:
